@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("PIXI"));
 	else if(typeof define === 'function' && define.amd)
-		define("typescript_intro", ["PIXI"], factory);
-	else if(typeof exports === 'object')
-		exports["typescript_intro"] = factory(require("PIXI"));
-	else
-		root["typescript_intro"] = factory(root["PIXI"]);
+		define(["PIXI"], factory);
+	else {
+		var a = typeof exports === 'object' ? factory(require("PIXI")) : factory(root["PIXI"]);
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
 })(window, function(__WEBPACK_EXTERNAL_MODULE__2__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
