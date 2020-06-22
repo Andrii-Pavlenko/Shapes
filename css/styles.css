@@ -1,0 +1,95 @@
+body, button, table, li, a, form, p {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  list-style: none;
+  border: none;
+  outline: none;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #cccccc;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80vw;
+  height: 80vh;
+  border: 0.5vw solid black;
+  background-color: maroon;
+  border-radius: 2vw;
+  padding: 0.5vw;
+}
+
+.container-game {
+  position: relative;
+  background-color: white;
+  width: 70vw;
+  height: 60vh;
+  /* border-radius: 2vw; */
+  border: 0.3vw solid black;
+}
+
+.container-long {
+  width: 80vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 2vh;
+}
+
+.container-calc__number {
+  position: relative;
+  width: 25vw;
+  height: 3.5vh;
+  background-color: white;
+  border-radius: 2vw;
+  border: 0.2vw solid black;
+  font-size: 2.5vh;
+}
+
+.between {
+  justify-content: space-between;
+  width: 70vw
+}
+
+.container-buttons__controler {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button {
+  line-height: 0.5;
+  width: calc(5vw / 2);
+  height: 3vh;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button:hover {
+  background-color: #aaaaaa;
+}
+
+.button:active {
+  background-color: #4e4848;
+}
+
+.text {
+  margin-top: 0.5vh;
+  color: #cccccc;
+  font-size: 18px;
+}
