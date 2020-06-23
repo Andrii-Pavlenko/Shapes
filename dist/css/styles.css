@@ -50,17 +50,26 @@ body, button, table, li, a, form, p {
 
 .container-calc__number {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   width: 25vw;
-  height: 3.5vh;
+  height: 6.5vh;
   background-color: white;
   border-radius: 2vw;
   border: 0.2vw solid black;
   font-size: 2.5vh;
+  line-height: 1;
 }
 
 .between {
   justify-content: space-between;
   width: 70vw
+}
+
+.container-buttons {
+  width: 16vw;
 }
 
 .container-buttons__controler {
@@ -91,5 +100,11 @@ body, button, table, li, a, form, p {
 .text {
   margin-top: 0.5vh;
   color: #cccccc;
-  font-size: 18px;
+  font-size: 2.1vw;
+}
+
+.container-text { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

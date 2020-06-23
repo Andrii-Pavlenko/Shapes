@@ -7,10 +7,6 @@ export class Shapes {
 
   private countPerSecond: number;
 
-  private surfaceArea: number;
-
-  private count: number;
-
   private oldTime: number;
 
   private elementsOnScreen = [];
@@ -23,12 +19,11 @@ export class Shapes {
     });
     document.querySelector("#gameContainer").appendChild(this.app.view);
 
-    this.app.renderer.plugins.interaction.on("mouseup", (e) => {
+    this.app.renderer.plugins.interaction.on("pointerdown", (e) => {
       this.generateElement(e);
     });
 
     PIXI.Loader.shared.load();
-    requestAnimationFrame.bind(this);
 
     window.addEventListener("resize", this.resize.bind(this));
 
@@ -118,7 +113,7 @@ export class Shapes {
     random.buttonMode = true;
     random["id"] = Math.random();
 
-    random.on("click", (ev) => {
+    random.on("pointerdown", (ev) => {
       for (let i = 0; i < this.elementsOnScreen.length; i++) {
         const element = this.elementsOnScreen[i];
         if (this.elementsOnScreen[i].id === ev.currentTarget["id"]) {
