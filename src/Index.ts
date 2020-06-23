@@ -77,32 +77,11 @@ export class Shapes {
   }
 
   private generateElement(e) {
-    let elementsNames = Object.keys(this.elements);
-
-    let elementName =
-      elementsNames[Math.floor(Math.random() * elementsNames.length)];
     const random = new PIXI.Graphics();
     random.beginFill(+this.getRandomColor());
-    random.name = elementName;
-    this.elements[elementName](random);
+    random.pivot.set(20, 20);
+    this.elements[Math.floor(Math.random() * this.elements.length)](random);
     random.endFill();
-    switch (elementName) {
-      case "circle":
-        random.pivot.set(0, -50);
-        break;
-
-      case "ellipse":
-        random.pivot.set(0, -30);
-        break;
-
-      case "random":
-        random.pivot.set(30, 30);
-        break;
-
-      default:
-        random.pivot.set(0, 0);
-        break;
-    }
 
     random.x = e
       ? e.data.global.x
@@ -131,7 +110,7 @@ export class Shapes {
     this.showSurfaceArea();
   }
 
-  private moveElements(delta = null) {
+  private moveElements() {
     for (let i = 0; i < this.elementsOnScreen.length; i++) {
       const element = this.elementsOnScreen[i];
       element.position.y += this.gravity;
@@ -174,30 +153,67 @@ export class Shapes {
   }
 
   private createCircule(circle) {
-    circle.drawCircle(0, 0, 50);
+    circle.drawCircle(0, 0, Math.floor(Math.random() * 30) + 30);
     circle.area = Math.round(Math.PI * Math.pow(circle.width / 2, 2));
+    circle.pivot.set(0, -50);
   }
 
   private createEllipse = (ellipse) => {
-    ellipse.drawEllipse(0, 0, 50, 30);
+    ellipse.drawEllipse(
+      0,
+      0,
+      Math.floor(Math.random() * 30) + 30,
+      Math.floor(Math.random() * 30) + 30
+    );
     ellipse.area = Math.round(
       (((Math.PI * ellipse.width) / 2) * ellipse.height) / 2
     );
+    ellipse.pivot.set(0, -30);
   };
 
   private createRectangle(rect) {
-    rect.drawRect(0, 0, 100, 100);
+    rect.drawRect(
+      0,
+      0,
+      Math.floor(Math.random() * 30) + 30,
+      Math.floor(Math.random() * 30) + 30
+    );
     rect.area = Math.round(rect.width * rect.height);
   }
 
   private createTriangle = (triangle) => {
-    const coordinates = [0, 0, 0, 50, 50, 0];
+    let firstValue = Math.floor(Math.random() * 30) + 10;
+    let secondValue = Math.floor(Math.random() * 30) + firstValue;
+
+    const coordinates = [
+      firstValue,
+      firstValue,
+      firstValue,
+      secondValue,
+      secondValue,
+      firstValue,
+    ];
     triangle.drawPolygon(coordinates);
     triangle.area = this.calculatePolygonArea(coordinates);
   };
 
   private createPentagon = (pentagon) => {
-    const coordinates = [0, 0, 50, 0, 70, 25, 25, 70, 0, 50];
+    let firstValue = Math.floor(Math.random() * 30);
+    let thirdValue = Math.floor(Math.random() * 30) + firstValue;
+    let fourthValue = Math.floor(Math.random() * 30) + thirdValue;
+
+    const coordinates = [
+      firstValue,
+      firstValue,
+      thirdValue,
+      firstValue,
+      fourthValue,
+      firstValue + 10,
+      firstValue + 10,
+      fourthValue,
+      firstValue,
+      thirdValue,
+    ];
     pentagon.drawPolygon(coordinates);
     pentagon.area = this.calculatePolygonArea(coordinates);
   };
@@ -258,6 +274,7 @@ export class Shapes {
 
     random.closePath();
     random.area = this.calculatePolygonArea(coordinates);
+    random.pivot.set(30, 30);
   };
 
   private calculatePolygonArea = (arr) => {
@@ -316,15 +333,15 @@ export class Shapes {
     this.showVirableInText("interval", this.countPerSecond, "intervalChild");
   }
 
-  private elements = {
-    circle: this.createCircule,
-    rect: this.createRectangle,
-    triangle: this.createTriangle,
-    ellipse: this.createEllipse,
-    pentagon: this.createPentagon,
-    hexagon: this.createHexagon,
-    random: this.createRandom,
-  };
+  private elements = [
+    this.createCircule,
+    this.createRectangle,
+    this.createTriangle,
+    this.createEllipse,
+    this.createPentagon,
+    this.createHexagon,
+    this.createRandom,
+  ];
 }
 
 window.onload = function () {

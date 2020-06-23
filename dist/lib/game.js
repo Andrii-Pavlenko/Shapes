@@ -107,19 +107,6 @@ module.exports = __webpack_require__(1);
 
 "use strict";
 
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -129,7 +116,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var PIXI = __importStar(__webpack_require__(2));
-// import constants from './consts';
 var Shapes = /** @class */ (function () {
     function Shapes() {
         var _this = this;
@@ -140,303 +126,55 @@ var Shapes = /** @class */ (function () {
             if (deltaTime < 0)
                 deltaTime = 0;
             if (deltaTime > 1000 / _this.countPerSecond) {
-                debugger;
                 _this.generateElement(null);
                 _this.oldTime = newTime;
             }
             _this.moveElements();
         };
-        this.showVirableInText = function (parentElement, childrenValue, childrenElement) {
-            var childNode = document.createElement("span");
-            childNode.id = childrenElement;
-            childNode.innerText = childrenValue + "";
-            document.querySelector("#" + childrenElement) &&
-                document
-                    .querySelector("#" + parentElement)
-                    .removeChild(document.querySelector("#" + childrenElement));
-            document.querySelector("#" + parentElement).appendChild(childNode);
-        };
-        this.calculatePolygonArea = function (arr) {
-            var x = [];
-            var y = [];
-            for (var i = 0; i < arr.length; i++) {
-                if (i % 2 == 0) {
-                    y.push(arr[i]);
-                }
-                else {
-                    x.push(arr[i]);
-                }
-            }
-            return _this.polygonArea(x, y, x.length);
-        };
-        this.polygonArea = function (X, Y, numPoints) {
-            var area = 0;
-            var j = numPoints - 1;
-            for (var i = 0; i < numPoints; i++) {
-                area += (X[j] + X[i]) * (Y[j] - Y[i]);
-                j = i;
-            }
-            return Math.abs(area / 2);
-        };
-        this.generateElement = function (event) {
-            debugger;
-            // let elementsNames = Object.keys(this.elements);
-            // let elementName =
-            //   elementsNames[Math.floor(Math.random() * elementsNames.length)];
-            var random = new PIXI.Graphics();
-            random.beginFill(+_this.getRandomColor());
-            // random.name = elementName;
-            new _this.elements[Math.floor(Math.random() * _this.elements.length)](random);
-            random.endFill();
-            // switch (elementName) {
-            //   case "circle":
-            //     random.pivot.set(0, -50);
-            //     break;
-            //   case "ellipse":
-            //     random.pivot.set(0, -30);
-            //     break;
-            //   case "random":
-            //     random.pivot.set(30, 30);
-            //     break;
-            //   default:
-            //     random.pivot.set(0, 0);
-            //     break;
-            // }
-            random.x = event
-                ? event.data.global.x
-                : Math.random() * (_this.app.renderer.width - random.width / 2);
-            random.y = event ? event.data.global.y : 0 - random.height;
-            random.interactive = true;
-            random.buttonMode = true;
-            random["id"] = Math.random();
-            random.on("pointerdown", function (ev) {
-                for (var i = 0; i < _this.elementsOnScreen.length; i++) {
-                    var element = _this.elementsOnScreen[i];
-                    if (_this.elementsOnScreen[i].id === ev.currentTarget["id"]) {
-                        _this.app.stage.removeChild(element);
-                        _this.elementsOnScreen.splice(i, 1);
-                    }
-                }
-                ev.stopImmediatePropagation();
-            });
-            _this.app.stage.addChild(random);
-            _this.elementsOnScreen.push(random);
-            _this.elementCount();
-            _this.showSurfaceArea();
-        };
-        this.elements = [
-            Circule,
-            Rectangle,
-            Triangle,
-            Ellipse,
-            Pentagon,
-            Hexagon,
-            Random,
-        ];
-        this.app = new PIXI.Application({
-            width: 600,
-            height: 400,
-            backgroundColor: 0xffffff,
-        });
-        document.querySelector("#gameContainer").appendChild(this.app.view);
-        this.app.renderer.plugins.interaction.on("pointerdown", function (e) {
-            debugger;
-            _this.generateElement(e);
-        });
-        PIXI.Loader.shared.load();
-        window.addEventListener("resize", this.resize.bind(this));
-        this.gravity = 1;
-        this.countPerSecond = 1;
-        this.oldTime = Date.now();
-        this.resize();
-        this.initializeButtonClicks();
-        this.app.ticker.add(this.generator);
-        this.showVirableInText("gravity", this.gravity, "gravitylChild");
-        this.showVirableInText("interval", this.countPerSecond, "intervalChild");
-        this.app.ticker.start();
-    }
-    Shapes.prototype.moveElements = function (delta) {
-        if (delta === void 0) { delta = null; }
-        for (var i = 0; i < this.elementsOnScreen.length; i++) {
-            var element = this.elementsOnScreen[i];
-            element.position.y += this.gravity;
-            if (element.position.y - element.height / 2 > this.app.renderer.height) {
-                this.app.stage.removeChild(element);
-                this.elementsOnScreen.splice(i, 1);
-            }
-        }
-    };
-    Shapes.prototype.initializeButtonClicks = function () {
-        var _this = this;
-        document.getElementById("addGravity").addEventListener("click", function (e) {
-            _this.gravityCalculation(true);
-        });
-        document
-            .getElementById("decreaseGravity")
-            .addEventListener("click", function (e) {
-            _this.gravityCalculation(false);
-        });
-        document.getElementById("addInterval").addEventListener("click", function (e) {
-            _this.intervalCalculation(true);
-        });
-        document
-            .getElementById("decreaseInterval")
-            .addEventListener("click", function (e) {
-            _this.intervalCalculation(false);
-        });
-    };
-    Shapes.prototype.elementCount = function () {
-        var count = this.elementsOnScreen.length;
-        this.showVirableInText("numberShapes", count, "numberShapesChild");
-    };
-    Shapes.prototype.showSurfaceArea = function () {
-        var amount = this.elementsOnScreen.reduce(function (acc, curr) {
-            return acc + Number(curr.area);
-        }, 0);
-        this.showVirableInText("surfaceArea", amount, "surfaceAreaChild");
-    };
-    Shapes.prototype.resize = function () {
-        var gameContainer = document.querySelector("#gameContainer");
-        var containerWidth = gameContainer.clientWidth;
-        var containerHeight = gameContainer.clientHeight;
-        this.app.renderer.resize(containerWidth, containerHeight);
-    };
-    Shapes.prototype.gravityCalculation = function (add) {
-        if (add) {
-            this.gravity = Number((this.gravity + 0.1).toFixed(1));
-        }
-        else {
-            this.gravity = Number((this.gravity - 0.1).toFixed(1));
-            if (this.gravity < 0.1) {
-                this.gravity = 0.1;
-            }
-        }
-        this.showVirableInText("gravity", this.gravity, "gravitylChild");
-    };
-    Shapes.prototype.intervalCalculation = function (add) {
-        if (add) {
-            this.countPerSecond = Math.round(this.countPerSecond + 1);
-        }
-        else {
-            this.countPerSecond = Math.round(this.countPerSecond - 1);
-            if (this.countPerSecond < 1) {
-                this.countPerSecond = 1;
-            }
-        }
-        this.showVirableInText("interval", this.countPerSecond, "intervalChild");
-    };
-    Shapes.prototype.getRandomColor = function () {
-        var letters = "0123456789ABCDEF";
-        var color = "0x";
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
-    return Shapes;
-}());
-exports.Shapes = Shapes;
-window.onload = function () {
-    new Shapes();
-};
-// class GenerateElement extends Shapes {
-//   constructor(event) {// add here event if click dont working    
-//     super();
-//   }
-// }
-var Circule = /** @class */ (function (_super) {
-    __extends(Circule, _super);
-    function Circule(elem) {
-        var _this = _super.call(this) || this;
-        _this.createCircule(elem);
-        return _this;
-    }
-    Circule.prototype.createCircule = function (circle) {
-        circle.drawCircle(0, 0, Math.floor(Math.random() * 50));
-        circle.area = Math.round(Math.PI * Math.pow(circle.width / 2, 2));
-    };
-    return Circule;
-}(Shapes));
-var Ellipse = /** @class */ (function (_super) {
-    __extends(Ellipse, _super);
-    function Ellipse(elem) {
-        var _this = _super.call(this) || this;
-        _this.createEllipse = function (ellipse) {
-            ellipse.drawEllipse(0, 0, Math.floor(Math.random() * 50), Math.floor(Math.random() * 50));
+        this.createEllipse = function (ellipse) {
+            ellipse.drawEllipse(0, 0, Math.floor(Math.random() * 30) + 30, Math.floor(Math.random() * 30) + 30);
             ellipse.area = Math.round((((Math.PI * ellipse.width) / 2) * ellipse.height) / 2);
+            ellipse.pivot.set(0, -30);
         };
-        _this.createEllipse(elem);
-        return _this;
-    }
-    return Ellipse;
-}(Shapes));
-var Rectangle = /** @class */ (function (_super) {
-    __extends(Rectangle, _super);
-    function Rectangle(elem) {
-        var _this = _super.call(this) || this;
-        _this.createRectangle(elem);
-        return _this;
-    }
-    Rectangle.prototype.createRectangle = function (rect) {
-        rect.drawRect(0, 0, Math.floor(Math.random() * 50), Math.floor(Math.random() * 50));
-        rect.area = Math.round(rect.width * rect.height);
-    };
-    return Rectangle;
-}(Shapes));
-var Triangle = /** @class */ (function (_super) {
-    __extends(Triangle, _super);
-    function Triangle(elem) {
-        var _this = _super.call(this) || this;
-        _this.createTriangle = function (triangle) {
+        this.createTriangle = function (triangle) {
+            var firstValue = Math.floor(Math.random() * 30) + 10;
+            var secondValue = Math.floor(Math.random() * 30) + firstValue;
             var coordinates = [
-                0,
-                0,
-                0,
-                Math.floor(Math.random() * 50),
-                Math.floor(Math.random() * 50),
-                0,
+                firstValue,
+                firstValue,
+                firstValue,
+                secondValue,
+                secondValue,
+                firstValue,
             ];
             triangle.drawPolygon(coordinates);
             triangle.area = _this.calculatePolygonArea(coordinates);
         };
-        _this.createTriangle(elem);
-        return _this;
-    }
-    return Triangle;
-}(Shapes));
-var Pentagon = /** @class */ (function (_super) {
-    __extends(Pentagon, _super);
-    function Pentagon(elem) {
-        var _this = _super.call(this) || this;
-        _this.createPentagon = function (pentagon) {
-            var coordinates = [0, 0, 50, 0, 70, 25, 25, 70, 0, 50];
+        this.createPentagon = function (pentagon) {
+            var firstValue = Math.floor(Math.random() * 30);
+            var thirdValue = Math.floor(Math.random() * 30) + firstValue;
+            var fourthValue = Math.floor(Math.random() * 30) + thirdValue;
+            var coordinates = [
+                firstValue,
+                firstValue,
+                thirdValue,
+                firstValue,
+                fourthValue,
+                firstValue + 10,
+                firstValue + 10,
+                fourthValue,
+                firstValue,
+                thirdValue,
+            ];
             pentagon.drawPolygon(coordinates);
             pentagon.area = _this.calculatePolygonArea(coordinates);
         };
-        _this.createPentagon(elem);
-        return _this;
-    }
-    return Pentagon;
-}(Shapes));
-var Hexagon = /** @class */ (function (_super) {
-    __extends(Hexagon, _super);
-    function Hexagon(elem) {
-        var _this = _super.call(this) || this;
-        _this.createHexagon = function (hexagon) {
+        this.createHexagon = function (hexagon) {
             var coordinates = [0, 0, 50, 0, 70, 25, 70, 70, 25, 70, 0, 50];
             hexagon.drawPolygon(coordinates);
             hexagon.area = _this.calculatePolygonArea(coordinates);
         };
-        _this.createHexagon(elem);
-        return _this;
-    }
-    return Hexagon;
-}(Shapes));
-var Random = /** @class */ (function (_super) {
-    __extends(Random, _super);
-    function Random(elem) {
-        var _this = _super.call(this) || this;
-        _this.createRandom = function (random) {
+        this.createRandom = function (random) {
             var coordinates = [
                 40,
                 40,
@@ -488,12 +226,191 @@ var Random = /** @class */ (function (_super) {
             }
             random.closePath();
             random.area = _this.calculatePolygonArea(coordinates);
+            random.pivot.set(30, 30);
         };
-        _this.createRandom(elem);
-        return _this;
+        this.calculatePolygonArea = function (arr) {
+            var x = [];
+            var y = [];
+            for (var i = 0; i < arr.length; i++) {
+                if (i % 2 == 0) {
+                    y.push(arr[i]);
+                }
+                else {
+                    x.push(arr[i]);
+                }
+            }
+            return _this.polygonArea(x, y, x.length);
+        };
+        this.polygonArea = function (X, Y, numPoints) {
+            var area = 0;
+            var j = numPoints - 1;
+            for (var i = 0; i < numPoints; i++) {
+                area += (X[j] + X[i]) * (Y[j] - Y[i]);
+                j = i;
+            }
+            return Math.abs(area / 2);
+        };
+        this.elements = [
+            this.createCircule,
+            this.createRectangle,
+            this.createTriangle,
+            this.createEllipse,
+            this.createPentagon,
+            this.createHexagon,
+            this.createRandom,
+        ];
+        this.app = new PIXI.Application({
+            width: 600,
+            height: 400,
+            backgroundColor: 0xffffff,
+        });
+        document.querySelector("#gameContainer").appendChild(this.app.view);
+        this.app.renderer.plugins.interaction.on("pointerdown", function (e) {
+            _this.generateElement(e);
+        });
+        PIXI.Loader.shared.load();
+        window.addEventListener("resize", this.resize.bind(this));
+        this.gravity = 1;
+        this.countPerSecond = 1;
+        this.oldTime = Date.now();
+        this.resize();
+        this.initializeButtonClicks();
+        this.app.ticker.add(this.generator);
+        this.showVirableInText("gravity", this.gravity, "gravitylChild");
+        this.showVirableInText("interval", this.countPerSecond, "intervalChild");
+        this.app.ticker.start();
     }
-    return Random;
-}(Shapes));
+    Shapes.prototype.elementCount = function () {
+        var count = this.elementsOnScreen.length;
+        this.showVirableInText("numberShapes", count, "numberShapesChild");
+    };
+    Shapes.prototype.showSurfaceArea = function () {
+        var amount = this.elementsOnScreen.reduce(function (acc, curr) {
+            return acc + Number(curr.area);
+        }, 0);
+        this.showVirableInText("surfaceArea", amount, "surfaceAreaChild");
+    };
+    Shapes.prototype.showVirableInText = function (parentElement, childrenValue, childrenElement) {
+        var childNode = document.createElement("span");
+        childNode.id = childrenElement;
+        childNode.innerText = childrenValue + "";
+        document.querySelector("#" + childrenElement) &&
+            document
+                .querySelector("#" + parentElement)
+                .removeChild(document.querySelector("#" + childrenElement));
+        document.querySelector("#" + parentElement).appendChild(childNode);
+    };
+    Shapes.prototype.generateElement = function (e) {
+        var _this = this;
+        var random = new PIXI.Graphics();
+        random.beginFill(+this.getRandomColor());
+        random.pivot.set(20, 20);
+        this.elements[Math.floor(Math.random() * this.elements.length)](random);
+        random.endFill();
+        random.x = e
+            ? e.data.global.x
+            : Math.random() * (this.app.renderer.width - random.width / 2);
+        random.y = e ? e.data.global.y : 0 - random.height;
+        random.interactive = true;
+        random.buttonMode = true;
+        random["id"] = Math.random();
+        random.on("pointerdown", function (ev) {
+            for (var i = 0; i < _this.elementsOnScreen.length; i++) {
+                var element = _this.elementsOnScreen[i];
+                if (_this.elementsOnScreen[i].id === ev.currentTarget["id"]) {
+                    _this.app.stage.removeChild(element);
+                    _this.elementsOnScreen.splice(i, 1);
+                }
+            }
+            ev.stopImmediatePropagation();
+        });
+        this.app.stage.addChild(random);
+        this.elementsOnScreen.push(random);
+        this.elementCount();
+        this.showSurfaceArea();
+    };
+    Shapes.prototype.moveElements = function () {
+        for (var i = 0; i < this.elementsOnScreen.length; i++) {
+            var element = this.elementsOnScreen[i];
+            element.position.y += this.gravity;
+            if (element.position.y - element.height / 2 > this.app.renderer.height) {
+                this.app.stage.removeChild(element);
+                this.elementsOnScreen.splice(i, 1);
+            }
+        }
+    };
+    Shapes.prototype.getRandomColor = function () {
+        var letters = "0123456789ABCDEF";
+        var color = "0x";
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+    Shapes.prototype.initializeButtonClicks = function () {
+        var _this = this;
+        document.getElementById("addGravity").addEventListener("click", function (e) {
+            _this.gravityCalculation(true);
+        });
+        document
+            .getElementById("decreaseGravity")
+            .addEventListener("click", function (e) {
+            _this.gravityCalculation(false);
+        });
+        document.getElementById("addInterval").addEventListener("click", function (e) {
+            _this.intervalCalculation(true);
+        });
+        document
+            .getElementById("decreaseInterval")
+            .addEventListener("click", function (e) {
+            _this.intervalCalculation(false);
+        });
+    };
+    Shapes.prototype.createCircule = function (circle) {
+        circle.drawCircle(0, 0, Math.floor(Math.random() * 30) + 30);
+        circle.area = Math.round(Math.PI * Math.pow(circle.width / 2, 2));
+        circle.pivot.set(0, -50);
+    };
+    Shapes.prototype.createRectangle = function (rect) {
+        rect.drawRect(0, 0, Math.floor(Math.random() * 30) + 30, Math.floor(Math.random() * 30) + 30);
+        rect.area = Math.round(rect.width * rect.height);
+    };
+    Shapes.prototype.resize = function () {
+        var gameContainer = document.querySelector("#gameContainer");
+        var containerWidth = gameContainer.clientWidth;
+        var containerHeight = gameContainer.clientHeight;
+        this.app.renderer.resize(containerWidth, containerHeight);
+    };
+    Shapes.prototype.gravityCalculation = function (add) {
+        if (add) {
+            this.gravity = Number((this.gravity + 0.1).toFixed(1));
+        }
+        else {
+            this.gravity = Number((this.gravity - 0.1).toFixed(1));
+            if (this.gravity < 0.1) {
+                this.gravity = 0.1;
+            }
+        }
+        this.showVirableInText("gravity", this.gravity, "gravitylChild");
+    };
+    Shapes.prototype.intervalCalculation = function (add) {
+        if (add) {
+            this.countPerSecond = Math.round(this.countPerSecond + 1);
+        }
+        else {
+            this.countPerSecond = Math.round(this.countPerSecond - 1);
+            if (this.countPerSecond < 1) {
+                this.countPerSecond = 1;
+            }
+        }
+        this.showVirableInText("interval", this.countPerSecond, "intervalChild");
+    };
+    return Shapes;
+}());
+exports.Shapes = Shapes;
+window.onload = function () {
+    new Shapes();
+};
 
 
 /***/ }),
