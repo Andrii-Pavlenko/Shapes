@@ -79,7 +79,7 @@ export class Shapes {
   private generateElement(e) {
     const random = new PIXI.Graphics();
     random.beginFill(+this.getRandomColor());
-    random.pivot.set(20, 20);
+    random.pivot.set(30, 50);
     this.elements[Math.floor(Math.random() * this.elements.length)](random);
     random.endFill();
 
@@ -155,7 +155,7 @@ export class Shapes {
   private createCircule(circle) {
     circle.drawCircle(0, 0, Math.floor(Math.random() * 30) + 30);
     circle.area = Math.round(Math.PI * Math.pow(circle.width / 2, 2));
-    circle.pivot.set(0, -50);
+    circle.pivot.set(0, -30);
   }
 
   private createEllipse = (ellipse) => {
@@ -175,15 +175,15 @@ export class Shapes {
     rect.drawRect(
       0,
       0,
-      Math.floor(Math.random() * 30) + 30,
-      Math.floor(Math.random() * 30) + 30
+      Math.floor(Math.random() * 50) + 30,
+      Math.floor(Math.random() * 50) + 30
     );
     rect.area = Math.round(rect.width * rect.height);
   }
 
   private createTriangle = (triangle) => {
-    let firstValue = Math.floor(Math.random() * 30) + 10;
-    let secondValue = Math.floor(Math.random() * 30) + firstValue;
+    let firstValue = Math.floor(Math.random() * 50) + 10;
+    let secondValue = Math.floor(Math.random() * 50) + firstValue;
 
     const coordinates = [
       firstValue,
@@ -198,9 +198,9 @@ export class Shapes {
   };
 
   private createPentagon = (pentagon) => {
-    let firstValue = Math.floor(Math.random() * 30);
-    let thirdValue = Math.floor(Math.random() * 30) + firstValue;
-    let fourthValue = Math.floor(Math.random() * 30) + thirdValue;
+    let firstValue = Math.floor(Math.random() * 50);
+    let thirdValue = Math.floor(Math.random() * 50) + firstValue;
+    let fourthValue = Math.floor(Math.random() * 50) + thirdValue;
 
     const coordinates = [
       firstValue,
@@ -208,8 +208,8 @@ export class Shapes {
       thirdValue,
       firstValue,
       fourthValue,
-      firstValue + 10,
-      firstValue + 10,
+      firstValue + 20,
+      firstValue + 20,
       fourthValue,
       firstValue,
       thirdValue,
@@ -219,7 +219,24 @@ export class Shapes {
   };
 
   private createHexagon = (hexagon) => {
-    const coordinates = [0, 0, 50, 0, 70, 25, 70, 70, 25, 70, 0, 50];
+    let firstValue = Math.floor(Math.random() * 50);
+    let secondValue = Math.floor(Math.random() * 50) + firstValue;
+    let thirdValue = Math.floor(Math.random() * 50) + secondValue;
+
+    const coordinates = [
+      firstValue,
+      firstValue,
+      secondValue,
+      firstValue,
+      thirdValue,
+      firstValue + 20,
+      thirdValue,
+      thirdValue,
+      firstValue + 20,
+      thirdValue,
+      firstValue,
+      secondValue,
+    ];
     hexagon.drawPolygon(coordinates);
     hexagon.area = this.calculatePolygonArea(coordinates);
   };
